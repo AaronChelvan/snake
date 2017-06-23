@@ -41,28 +41,28 @@ function Snake() {
         this.direction = "down";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+1);
+        var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-1);
         this.location.unshift(newHeadLocation);
         //Update the head
-        this.head = new Coordinate(this.head.getX(), this.head.getY()+1);
+        this.head = new Coordinate(this.head.getX(), this.head.getY()-1);
     }
     this.moveLeft= function() {
         this.direction = "left";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+1);
+        var newHeadLocation = new Coordinate(this.head.getX()-1, this.head.getY());
         this.location.unshift(newHeadLocation);
         //Update the head
-        this.head = new Coordinate(this.head.getX(), this.head.getY()+1);
+        this.head = new Coordinate(this.head.getX()-1, this.head.getY());
     }
     this.moveRight = function() {
         this.direction = "right";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+1);
+        var newHeadLocation = new Coordinate(this.head.getX()+1, this.head.getY());
         this.location.unshift(newHeadLocation);
         //Update the head
-        this.head = new Coordinate(this.head.getX(), this.head.getY()+1);
+        this.head = new Coordinate(this.head.getX()+1, this.head.getY());
     }
 }
 
@@ -82,3 +82,6 @@ function printSnake(playerSnake) {
 
 var playerSnake = new Snake();
 printSnake(playerSnake);
+
+//Start listening for key presses
+document.addEventListener()
