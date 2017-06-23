@@ -25,10 +25,10 @@ function Snake() {
     this.getDirection = function() {
         return this.direction;
     };
+
     this.location = [];//An array of (x,y) coordinates representing the squares the snake occupies.
                 //The first item is the head.
                 //The last item is the end of the tail.
-
     //Initialise the starting location of the snake. It is initially 3 squares long.
     for (var i = 0; i < 3; i++) {
         var startingLocation = new Coordinate(15, 15+i);
@@ -41,6 +41,13 @@ function Snake() {
     this.updateHead = function (){
         this.head = this.location[0];
     };
+
+    //Print the entire snake onto the canvas
+    this.printSnake = function() {
+        for (var i = 0; i < this.location.length; i++) {
+            fillCoords(this.location[i]);
+        }
+    }
 
     //Movement methods
     this.moveUp = function() {
@@ -67,7 +74,7 @@ function Snake() {
         this.location.unshift(newHeadLocation);
         this.updateHead();
     };
-    this.moveLeft= function() {
+    this.moveLeft = function() {
         this.direction = "left";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
@@ -78,7 +85,7 @@ function Snake() {
         }
         this.location.unshift(newHeadLocation);
         this.updateHead();
-    }
+    };
     this.moveRight = function() {
         this.direction = "right";
         this.location.pop(); //Remove the end of the tail.
@@ -100,12 +107,7 @@ function fillCoords(coordinate) {
     context.fillRect(coordinate.getX()*10,310-coordinate.getY()*10,10,10);
 }
 
-//Print the entire snake onto the canvas
-function printSnake() {
-    for (var i = 0; i < playerSnake.location.length; i++) {
-        fillCoords(playerSnake.location[i]);
-    }
-}
+
 
 //Clears the canvas
 function clearCanvas() {
@@ -159,13 +161,13 @@ function updateGame() {
             break;
     }
     clearCanvas(); //Clear the canvas
-    printSnake(playerSnake); //Print the snake onto the new updated location
+    playerSnake.printSnake(); //Print the snake onto the new updated location
     lastKeyPress = null; //Clear the last key press
 }
 
 //Create the player and print it
 var playerSnake = new Snake(); //Global variable
-printSnake(playerSnake);
+playerSnake.printSnake();
 
 //Global variable containing a string describing the last key press. "up", "left", etc.
 //Contains null if a non-arrow key.
