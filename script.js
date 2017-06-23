@@ -21,7 +21,7 @@ function Snake() {
     //Initialise the starting location of the snake. It is 3 squares long.
     for (var i = 0; i < 3; i++) {
         var startingLocation = new Coordinate(15, 15+i);
-        this.location.push(startingLocation);
+        this.location.unshift(startingLocation);
     }
 
     //The coordinates of the head of the snake (i.e. this.location[0])
@@ -70,7 +70,7 @@ function Snake() {
 function fillCoords(coordinate) {
     var canvas = document.getElementById("playingField");
     var context = canvas.getContext("2d");
-    context.fillRect(coordinate.x*10,310-coordinate.y*10,10,10);
+    context.fillRect(coordinate.getX()*10,310-coordinate.getY()*10,10,10);
 }
 
 //Given a Snake object, print the entire snake onto the canvas
@@ -80,8 +80,46 @@ function printSnake(playerSnake) {
     }
 }
 
+//Clears the canvas
+function clearCanvas() {
+    var canvas = document.getElementById("playingField");
+    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+//Create the player and print it
 var playerSnake = new Snake();
 printSnake(playerSnake);
 
 //Start listening for key presses
-document.addEventListener()
+document.onkeydown = function checkKeyPressed(key) {
+    switch (key.keyCode) {
+        case 37:
+            console.log("Key press recorded: left arrow");
+            clearCanvas();
+            playerSnake.moveLeft();
+            printSnake(playerSnake);
+            return "left";
+        case 38:
+            console.log("Key press recorded: up arrow");
+            clearCanvas();
+            playerSnake.moveUp();
+            printSnake(playerSnake);
+            return "up";
+        case 39:
+            console.log("Key press recorded: right arrow");
+            clearCanvas();
+            playerSnake.moveRight();
+            printSnake(playerSnake);
+            return "right";
+        case 40:
+            console.log("Key press recorded: down arrow");
+            clearCanvas();
+            playerSnake.moveDown();
+            printSnake(playerSnake);
+            return "down";
+        default:
+            console.log("Key press recorded: not an arrow key"); //debug
+            return null;
+    }
+}
