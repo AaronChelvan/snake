@@ -35,8 +35,12 @@ function Snake() {
         this.location.unshift(startingLocation);
     }
 
-    //The coordinates of the head of the snake (i.e. this.location[0])
-    this.head = new Coordinate(this.location[0].getX(), this.location[0].getY());
+    //Contains the coordinates of the head of the snake
+    //It is a reference to this.location[0]
+    this.head = this.location[0];
+    this.updateHead = function (){
+        this.head = this.location[0];
+    };
 
     //Movement methods
     this.moveUp = function() {
@@ -45,14 +49,11 @@ function Snake() {
         //Add the new location to the beginning of the location array.
         if (this.head.getY()+1 > 31) { //If the snake moves past the top boundary
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-31);
-            //Update the head
-            this.head.setY(this.head.getY()-31);
         } else {
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+1);
-            //Update the head
-            this.head.setY(this.head.getY()+1);
         }
         this.location.unshift(newHeadLocation);
+        this.updateHead();
     };
     this.moveDown = function() {
         this.direction = "down";
@@ -60,14 +61,11 @@ function Snake() {
         //Add the new location to the beginning of the location array.
         if (this.head.getY()-1 < 0) {
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+31);
-            //Update the head
-            this.head.setY(this.head.getY()+31);
         } else {
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-1);
-            //Update the head
-            this.head.setY(this.head.getY()-1);
         }
         this.location.unshift(newHeadLocation);
+        this.updateHead();
     };
     this.moveLeft= function() {
         this.direction = "left";
@@ -75,14 +73,11 @@ function Snake() {
         //Add the new location to the beginning of the location array.
         if (this.head.getX()-1 < 0) {
             var newHeadLocation = new Coordinate(this.head.getX()+31, this.head.getY());
-            //Update the head
-            this.head.setX(this.head.getX()+31);
         } else {
             var newHeadLocation = new Coordinate(this.head.getX()-1, this.head.getY());
-            //Update the head
-            this.head.setX(this.head.getX()-1);
         }
         this.location.unshift(newHeadLocation);
+        this.updateHead();
     }
     this.moveRight = function() {
         this.direction = "right";
@@ -90,14 +85,11 @@ function Snake() {
         //Add the new location to the beginning of the location array.
         if (this.head.getX() + 1 > 31) {
             var newHeadLocation = new Coordinate(this.head.getX()-31, this.head.getY());
-            //Update the head
-            this.head.setX(this.head.getX()-31);
         } else {
             var newHeadLocation = new Coordinate(this.head.getX()+1, this.head.getY());
-            //Update the head
-            this.head.setX(this.head.getX()+1);
         }
         this.location.unshift(newHeadLocation);
+        this.updateHead();
     };
 }
 
