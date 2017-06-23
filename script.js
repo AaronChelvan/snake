@@ -9,6 +9,14 @@ function Coordinate(x,y) {
     this.getY = function() {
         return this.y;
     }
+    this.setX = function(x) {
+        this.x = x;
+        return;
+    }
+    this.setY = function(y) {
+        this.y = y;
+        return;
+    }
 }
 
 //Snake object constructor
@@ -21,7 +29,7 @@ function Snake() {
                 //The first item is the head.
                 //The last item is the end of the tail.
 
-    //Initialise the starting location of the snake. It is 3 squares long.
+    //Initialise the starting location of the snake. It is initially 3 squares long.
     for (var i = 0; i < 3; i++) {
         var startingLocation = new Coordinate(15, 15+i);
         this.location.unshift(startingLocation);
@@ -35,38 +43,67 @@ function Snake() {
         this.direction = "up";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+1);
-        this.location.unshift(newHeadLocation);
-        //Update the head
-        this.head = new Coordinate(this.head.getX(), this.head.getY()+1);
+        if (this.head.getY()+1 > 31) { //If the snake moves past the top boundary
+            var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-31);
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX(), this.head.getY()-31);
+        } else {
+            var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+1);
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX(), this.head.getY()+1);
+        }
+
     };
     this.moveDown = function() {
         this.direction = "down";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-1);
-        this.location.unshift(newHeadLocation);
-        //Update the head
-        this.head = new Coordinate(this.head.getX(), this.head.getY()-1);
-    }
+        if (this.head.getY()-1 < 0) {
+            var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+31);
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX(), this.head.getY()+31);
+        } else {
+            var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-1);
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX(), this.head.getY()-1);
+        }
+    };
     this.moveLeft= function() {
         this.direction = "left";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX()-1, this.head.getY());
-        this.location.unshift(newHeadLocation);
-        //Update the head
-        this.head = new Coordinate(this.head.getX()-1, this.head.getY());
+        if (this.head.getX()-1 < 0) {
+            var newHeadLocation = new Coordinate(this.head.getX()+31, this.head.getY());
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX()+31, this.head.getY());
+        } else {
+            var newHeadLocation = new Coordinate(this.head.getX()-1, this.head.getY());
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX()-1, this.head.getY());
+        }
     }
     this.moveRight = function() {
         this.direction = "right";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        var newHeadLocation = new Coordinate(this.head.getX()+1, this.head.getY());
-        this.location.unshift(newHeadLocation);
-        //Update the head
-        this.head = new Coordinate(this.head.getX()+1, this.head.getY());
-    }
+        if (this.head.getX() + 1 > 31) {
+            var newHeadLocation = new Coordinate(this.head.getX()-31, this.head.getY());
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX()-31, this.head.getY());
+        } else {
+            var newHeadLocation = new Coordinate(this.head.getX()+1, this.head.getY());
+            this.location.unshift(newHeadLocation);
+            //Update the head
+            this.head = new Coordinate(this.head.getX()+1, this.head.getY());
+        }
+    };
 }
 
 //Given a Coordinate object, colour the corresponding square on the canvas.
@@ -92,6 +129,7 @@ function clearCanvas() {
 
 //Update the game state
 function updateGame() {
+    console.log("X = " + playerSnake.head.getX() + "; Y = " + playerSnake.head.getY());
     switch (lastKeyPress) {
         case null: //If a non-arrow key was pressed, keep moving in the direction the snake is currently facing
             if (playerSnake.getDirection() == "left") {
