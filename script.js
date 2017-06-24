@@ -109,6 +109,20 @@ function Snake() {
         this.location.unshift(newHeadLocation);
         this.updateHead();
     };
+
+    //Returns a boolean that states whether or not the snake has eaten itself
+    this.checkEatenItself = function() {
+        var eatenItself = false;
+        //Start from i = 1, because we don't want to compare the head to itself
+        for (var i = 1; i < this.location.length; i++) {
+            if (this.head.getX() == this.location[i].getX() &&
+                this.head.getY() == this.location[i].getY()) {
+                eatenItself = true;
+                break;
+            }
+        }
+        return eatenItself;
+    }
 }
 
 //Given a Coordinate object, make the corresponding square on the canvas black.
@@ -231,6 +245,11 @@ function updateGame() {
         foodLocation = spawnFood(); //Generate a new location for the next food item
     }
 
+    //Check if the snake has eaten itself
+    if (playerSnake.checkEatenItself() == true) {
+        alert("YOU LOSE!");
+    }
+
     switch (lastKeyPress) {
         case null: //If a non-arrow key was pressed, keep moving in the direction the snake is currently facing
             if (playerSnake.getDirection() == "left") {
@@ -277,13 +296,12 @@ function updateGame() {
     clearCanvas(); //Clear the canvas
     colourFillCoords(foodLocation, "#FF0000"); //Print the food item onto the screen
     playerSnake.printSnake(); //Print the snake onto the new updated location
-
     lastKeyPress = null; //Clear the last key press
 }
 
 //Create the player and print it
 var playerSnake = new Snake(); //Global variable
-playerSnake.printSnake();
+//playerSnake.printSnake();
 
 //Global variable containing a string describing the last key press. "up", "left", etc.
 //Contains null if a non-arrow key was pressed.
