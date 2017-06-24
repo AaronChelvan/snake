@@ -66,7 +66,7 @@ function Snake() {
         this.direction = "down";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        if (this.head.getY()-1 < 0) {
+        if (this.head.getY()-1 < 0) { //If the snake moves past the bottom boundary
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+31);
         } else {
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-1);
@@ -78,7 +78,7 @@ function Snake() {
         this.direction = "left";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        if (this.head.getX()-1 < 0) {
+        if (this.head.getX()-1 < 0) { //If the snake moves past the left boundary
             var newHeadLocation = new Coordinate(this.head.getX()+31, this.head.getY());
         } else {
             var newHeadLocation = new Coordinate(this.head.getX()-1, this.head.getY());
@@ -90,7 +90,7 @@ function Snake() {
         this.direction = "right";
         this.location.pop(); //Remove the end of the tail.
         //Add the new location to the beginning of the location array.
-        if (this.head.getX() + 1 > 31) {
+        if (this.head.getX() + 1 > 31) { //If the snake moves past the right boundary
             var newHeadLocation = new Coordinate(this.head.getX()-31, this.head.getY());
         } else {
             var newHeadLocation = new Coordinate(this.head.getX()+1, this.head.getY());
@@ -100,20 +100,85 @@ function Snake() {
     };
 }
 
-//Given a Coordinate object, colour the corresponding square on the canvas.
+//Given a Coordinate object, make the corresponding square on the canvas black.
 function fillCoords(coordinate) {
     var canvas = document.getElementById("playingField");
     var context = canvas.getContext("2d");
+    context.fillStyle = "#000000"; //Black
     context.fillRect(coordinate.getX()*10,310-coordinate.getY()*10,10,10);
 }
 
-
+//Given a Coordinate object, colour the corresponding square with the specified colour.
+//The 'colour' parameter is a hexadecimal string representing the colour e.g. "#FF0000" for red.
+function colourFillCoords(coordinate, colour) {
+    var canvas = document.getElementById("playingField");
+    var context = canvas.getContext("2d");
+    context.fillStyle = colour;
+    context.fillRect(coordinate.getX()*10,310-coordinate.getY()*10,10,10);
+}
 
 //Clears the canvas
 function clearCanvas() {
     var canvas = document.getElementById("playingField");
     var context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+//Clear snake
+/*function clearSnake() {
+    var canvas = document.getElementById("playingField");
+    var context = canvas.getContext("2d");
+    for (var i = 0; i < playerSnake.location.length; i++) {
+        context.clearRect(playerSnake.location[i].getX()*10, 310-playerSnake.location[i].getY(), 10, 10);
+    }
+}*/
+
+//Return a random integer within a specified range.
+//min <= int < max
+function randomInteger(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+//Returns a Coordinate object giving the location of where the next food item should spawn.
+function spawnFood(){
+    var xCoordinate = randomInteger(0, 32); //Generate a random set of (x,y) coordinates
+    var yCoordinate = randomInteger(0, 32);
+
+    //After randomly generating a set of coordinates, scan across the grid until
+    //a valid location for the food to spawn is found.
+    while (true) {
+        xCoordinate++;
+        if (xCoordinate == 32) {
+            xCoordinate = 0;
+            yCoordinate++;
+            if (yCoordinate == 32) {
+                yCoordinate = 0;
+            }
+        }
+
+        //Check if the snake's body takes up the square at the generated coordinates.
+        //(We don't want food to spawn on the body of the snake)
+        var collisionFound = false;
+        for (var i = 0; i < playerSnake.location.length; i++) {
+            if (xCoordinate == playerSnake.location[i].getX() && yCoordinate == playerSnake.location[i].getY()) {
+                collisionFound = true; //If the snake does take up the generated coordinates, break early.
+                break;
+            }
+        }
+
+        //If a collision was found, we need to keep searching for a valid place to spawn food.
+        if (collisionFound == true) {
+            continue;
+        } else { //If this flag is set to false, a collision was never found.
+                //We've found a valid location for the food to spawn.
+            break;
+        }
+    }
+
+    var foodLocation = new Coordinate(xCoordinate, yCoordinate);
+    return foodLocation;
 }
 
 //Update the game state
@@ -162,16 +227,24 @@ function updateGame() {
     }
     clearCanvas(); //Clear the canvas
     playerSnake.printSnake(); //Print the snake onto the new updated location
+    colourFillCoords(foodLocation, "#FF0000"); //Print the food item onto the screen
+
     lastKeyPress = null; //Clear the last key press
 }
+
+
 
 //Create the player and print it
 var playerSnake = new Snake(); //Global variable
 playerSnake.printSnake();
 
 //Global variable containing a string describing the last key press. "up", "left", etc.
-//Contains null if a non-arrow key.
+//Contains null if a non-arrow key was pressed.
 var lastKeyPress = null;
+
+//Global variable containing the coordinates of where the food is currently at.
+//At the start of the game, it is initialised with spawnFood()
+var foodLocation = spawnFood();
 
 //Listen for key presses
 document.onkeydown = function checkKeyPressed(key) {
