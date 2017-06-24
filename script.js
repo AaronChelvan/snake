@@ -233,6 +233,14 @@ document.onkeydown = function checkKeyPressed(key) {
     return;
 }
 
+//Create a new game by reinitialising the global variables
+function newGame() {
+    playerSnake = new Snake();
+    lastKeyPress = null;
+    foodLocation = spawnFood();
+    eaten = false;
+}
+
 //Update the game state
 function updateGame() {
     console.log("X = " + playerSnake.head.getX() + "; Y = " + playerSnake.head.getY());
@@ -247,7 +255,10 @@ function updateGame() {
 
     //Check if the snake has eaten itself
     if (playerSnake.checkEatenItself() == true) {
+        clearInterval(gameplay);
         alert("YOU LOSE!");
+        return; //Return early so that the snake does not appear to move one space after it dies.
+        //newGame();
     }
 
     switch (lastKeyPress) {
@@ -301,7 +312,6 @@ function updateGame() {
 
 //Create the player and print it
 var playerSnake = new Snake(); //Global variable
-//playerSnake.printSnake();
 
 //Global variable containing a string describing the last key press. "up", "left", etc.
 //Contains null if a non-arrow key was pressed.
@@ -315,4 +325,6 @@ var foodLocation = spawnFood();
 //as the food item (true) or not (false).
 var eaten = false; //Initially set to 'false'
 
-setInterval(updateGame, 200); //Refresh the game state at a specified time interval
+//Refresh the game state at a specified time interval.
+//Saved to a variable so that clearInterval() can be called to freeze the game when the player loses.
+var gameplay = setInterval(updateGame, 200);
