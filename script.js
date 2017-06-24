@@ -50,9 +50,14 @@ function Snake() {
     }
 
     //Movement methods
-    this.moveUp = function() {
+    //For all 4 of these methods, the parameter 'eaten' is a boolean.
+    //It is set to 'true' if the head is currently on the same square as a food item.
+    //If so, don't remove the end of the tail. (So that the snake can grow by 1.)
+    this.moveUp = function(eaten) {
         this.direction = "up";
-        this.location.pop(); //Remove the end of the tail.
+        if (eaten == false) {
+            this.location.pop(); //Remove the end of the tail.
+        }
         //Add the new location to the beginning of the location array.
         if (this.head.getY()+1 > 31) { //If the snake moves past the top boundary
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()-31);
@@ -62,9 +67,11 @@ function Snake() {
         this.location.unshift(newHeadLocation);
         this.updateHead();
     };
-    this.moveDown = function() {
+    this.moveDown = function(eaten) {
         this.direction = "down";
-        this.location.pop(); //Remove the end of the tail.
+        if (eaten == false) {
+            this.location.pop(); //Remove the end of the tail.
+        }
         //Add the new location to the beginning of the location array.
         if (this.head.getY()-1 < 0) { //If the snake moves past the bottom boundary
             var newHeadLocation = new Coordinate(this.head.getX(), this.head.getY()+31);
@@ -74,9 +81,11 @@ function Snake() {
         this.location.unshift(newHeadLocation);
         this.updateHead();
     };
-    this.moveLeft = function() {
+    this.moveLeft = function(eaten) {
         this.direction = "left";
-        this.location.pop(); //Remove the end of the tail.
+        if (eaten == false) {
+            this.location.pop(); //Remove the end of the tail.
+        }
         //Add the new location to the beginning of the location array.
         if (this.head.getX()-1 < 0) { //If the snake moves past the left boundary
             var newHeadLocation = new Coordinate(this.head.getX()+31, this.head.getY());
@@ -88,7 +97,9 @@ function Snake() {
     };
     this.moveRight = function() {
         this.direction = "right";
-        this.location.pop(); //Remove the end of the tail.
+        if (eaten == false) {
+            this.location.pop(); //Remove the end of the tail.
+        }
         //Add the new location to the beginning of the location array.
         if (this.head.getX() + 1 > 31) { //If the snake moves past the right boundary
             var newHeadLocation = new Coordinate(this.head.getX()-31, this.head.getY());
@@ -181,71 +192,6 @@ function spawnFood(){
     return foodLocation;
 }
 
-//Update the game state
-function updateGame() {
-    console.log("X = " + playerSnake.head.getX() + "; Y = " + playerSnake.head.getY());
-    switch (lastKeyPress) {
-        case null: //If a non-arrow key was pressed, keep moving in the direction the snake is currently facing
-            if (playerSnake.getDirection() == "left") {
-                playerSnake.moveLeft();
-            } else if (playerSnake.getDirection() == "up") {
-                playerSnake.moveUp();
-            } else if (playerSnake.getDirection() == "right") {
-                playerSnake.moveRight();
-            } else if (playerSnake.getDirection() == "down") {
-                playerSnake.moveDown();
-            }
-            break;
-        case "left": //Left arrow
-            if (playerSnake.getDirection() == "right") { //Can't move left if facing right
-                playerSnake.moveRight(); //Keep moving right
-                break;
-            }
-            playerSnake.moveLeft();
-            break;
-        case "up": //Up arrow
-            if (playerSnake.getDirection() == "down") { //Can't move up if facing down
-                playerSnake.moveDown(); //Keep moving down
-                break;
-            }
-            playerSnake.moveUp();
-            break;
-        case "right": //Right arrow;
-            if (playerSnake.getDirection() == "left") { //Can't move right if facing left
-                playerSnake.moveLeft(); //Keep moving left
-                break;
-            }
-            playerSnake.moveRight();
-            break;
-        case "down": //Down arrow;
-            if (playerSnake.getDirection() == "up") { //Can't move down if facing up
-                playerSnake.moveUp();//Keep moving up
-                break;
-            }
-            playerSnake.moveDown();
-            break;
-    }
-    clearCanvas(); //Clear the canvas
-    playerSnake.printSnake(); //Print the snake onto the new updated location
-    colourFillCoords(foodLocation, "#FF0000"); //Print the food item onto the screen
-
-    lastKeyPress = null; //Clear the last key press
-}
-
-
-
-//Create the player and print it
-var playerSnake = new Snake(); //Global variable
-playerSnake.printSnake();
-
-//Global variable containing a string describing the last key press. "up", "left", etc.
-//Contains null if a non-arrow key was pressed.
-var lastKeyPress = null;
-
-//Global variable containing the coordinates of where the food is currently at.
-//At the start of the game, it is initialised with spawnFood()
-var foodLocation = spawnFood();
-
 //Listen for key presses
 document.onkeydown = function checkKeyPressed(key) {
     switch (key.keyCode) {
@@ -272,5 +218,83 @@ document.onkeydown = function checkKeyPressed(key) {
     }
     return;
 }
+
+//Update the game state
+function updateGame() {
+    console.log("X = " + playerSnake.head.getX() + "; Y = " + playerSnake.head.getY());
+
+    //Check if the snake has eaten the food
+    if (playerSnake.head.getX() == foodLocation.getX() &&
+        playerSnake.head.getY() == foodLocation.getY()) {
+        console.log("The snake ate");
+        eaten = true; //Set 'eaten' to true
+        foodLocation = spawnFood(); //Generate a new location for the next food item
+    }
+
+    switch (lastKeyPress) {
+        case null: //If a non-arrow key was pressed, keep moving in the direction the snake is currently facing
+            if (playerSnake.getDirection() == "left") {
+                playerSnake.moveLeft(eaten);
+            } else if (playerSnake.getDirection() == "up") {
+                playerSnake.moveUp(eaten);
+            } else if (playerSnake.getDirection() == "right") {
+                playerSnake.moveRight(eaten);
+            } else if (playerSnake.getDirection() == "down") {
+                playerSnake.moveDown(eaten);
+            }
+            break;
+        case "left": //Left arrow
+            if (playerSnake.getDirection() == "right") { //Can't move left if facing right
+                playerSnake.moveRight(eaten); //Keep moving right
+                break;
+            }
+            playerSnake.moveLeft(eaten);
+            break;
+        case "up": //Up arrow
+            if (playerSnake.getDirection() == "down") { //Can't move up if facing down
+                playerSnake.moveDown(eaten); //Keep moving down
+                break;
+            }
+            playerSnake.moveUp(eaten);
+            break;
+        case "right": //Right arrow;
+            if (playerSnake.getDirection() == "left") { //Can't move right if facing left
+                playerSnake.moveLeft(eaten); //Keep moving left
+                break;
+            }
+            playerSnake.moveRight(eaten);
+            break;
+        case "down": //Down arrow;
+            if (playerSnake.getDirection() == "up") { //Can't move down if facing up
+                playerSnake.moveUp(eaten);//Keep moving up
+                break;
+            }
+            playerSnake.moveDown(eaten);
+            break;
+    }
+
+    eaten = false; //After the snake has moved, set 'eaten' to 'false'
+    clearCanvas(); //Clear the canvas
+    colourFillCoords(foodLocation, "#FF0000"); //Print the food item onto the screen
+    playerSnake.printSnake(); //Print the snake onto the new updated location
+
+    lastKeyPress = null; //Clear the last key press
+}
+
+//Create the player and print it
+var playerSnake = new Snake(); //Global variable
+playerSnake.printSnake();
+
+//Global variable containing a string describing the last key press. "up", "left", etc.
+//Contains null if a non-arrow key was pressed.
+var lastKeyPress = null;
+
+//Global variable containing the coordinates of where the food is currently at.
+//At the start of the game, it is initialised with spawnFood()
+var foodLocation = spawnFood();
+
+//Global variable containing whether the snake's head is on the same square
+//as the food item (true) or not (false).
+var eaten = false; //Initially set to 'false'
 
 setInterval(updateGame, 200); //Refresh the game state at a specified time interval
