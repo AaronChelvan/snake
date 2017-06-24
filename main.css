@@ -1,6 +1,13 @@
 #playingField {
     background: #bdef8b;
     border: 1px solid black;
+    margin: auto;
+    padding: 0px;
+    display: block;
+}
+
+.scoreDisplay {
+    text-align: center;
 }
 
 h1 {
