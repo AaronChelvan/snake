@@ -95,7 +95,7 @@ function Snake() {
         this.location.unshift(newHeadLocation);
         this.updateHead();
     };
-    this.moveRight = function() {
+    this.moveRight = function(eaten) {
         this.direction = "right";
         if (eaten == false) {
             this.location.pop(); //Remove the end of the tail.
@@ -209,6 +209,10 @@ function spawnFood(){
 //Listen for key presses
 document.onkeydown = function checkKeyPressed(key) {
     switch (key.keyCode) {
+        /*case 32: //Spacebar
+            console.log("Key press recorded: spacebar");
+            lastKeyPress = "space";
+            break;*/
         case 37: //Left arrow
             console.log("Key press recorded: left arrow");
             lastKeyPress = "left";
@@ -226,24 +230,51 @@ document.onkeydown = function checkKeyPressed(key) {
             lastKeyPress = "down";
             break;
         default:
-            console.log("Key press recorded: not an arrow key");
+            console.log("Key press recorded: other");
             lastKeyPress = null;
             break;
     }
     return;
 }
 
-//Create a new game by reinitialising the global variables
+//Increments the current score and modifies the score display.
+//Also increments the best score if the current score is the new best score.
+function incrementScore() {
+    document.querySelector("#currentScore").innerText++; //Increment currentScore
+    var currentScore = Number(document.querySelector("#currentScore").innerText);
+    var bestScore = Number(document.querySelector("#bestScore").innerText);
+    if (currentScore > bestScore) { //If currentScore is higher than bestScore, increment bestScore too.
+        document.querySelector("#bestScore").innerText++;
+    }
+    //console.log("currentScore = " + currentScore);
+    //console.log("bestScore = " + bestScore);
+}
+
+function printGameOver() {
+    var canvas = document.getElementById("playingField");
+    var ctx = canvas.getContext("2d");
+    ctx.font = "30px Montserrat";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER",160,160);
+}
+
+//Create a new game by reinitialising the global variables, and running the updateGame function
 function newGame() {
     playerSnake = new Snake();
     lastKeyPress = null;
     foodLocation = spawnFood();
-    eaten = false;
+    //gameOver = false;
+    document.querySelector("#currentScore").innerText = 0;
+    gameplay = setInterval(updateGame, 200);
 }
 
 //Update the game state
 function updateGame() {
-    console.log("X = " + playerSnake.head.getX() + "; Y = " + playerSnake.head.getY());
+    //console.log("X = " + playerSnake.head.getX() + "; Y = " + playerSnake.head.getY());
+
+    //Boolean containing whether the snake's head is on the same square
+    //as the food item (true) or not (false).
+    var eaten = false;
 
     //Check if the snake has eaten the food
     if (playerSnake.head.getX() == foodLocation.getX() &&
@@ -251,18 +282,21 @@ function updateGame() {
         console.log("The snake ate");
         eaten = true; //Set 'eaten' to true
         foodLocation = spawnFood(); //Generate a new location for the next food item
+        incrementScore();
     }
 
     //Check if the snake has eaten itself
     if (playerSnake.checkEatenItself() == true) {
         clearInterval(gameplay);
-        alert("YOU LOSE!");
+        //gameOver = true;
+        //alert("YOU LOSE!");
+        //printGameOver();
         return; //Return early so that the snake does not appear to move one space after it dies.
         //newGame();
     }
 
     switch (lastKeyPress) {
-        case null: //If a non-arrow key was pressed, keep moving in the direction the snake is currently facing
+        case null: //If none of the handled keys were pressed, keep moving in the direction the snake is currently facing
             if (playerSnake.getDirection() == "left") {
                 playerSnake.moveLeft(eaten);
             } else if (playerSnake.getDirection() == "up") {
@@ -273,6 +307,21 @@ function updateGame() {
                 playerSnake.moveDown(eaten);
             }
             break;
+        /*case "space": //Spacebar
+            if (gameOver == true) {
+                newGame();
+            } else {
+                if (playerSnake.getDirection() == "left") {
+                    playerSnake.moveLeft(eaten);
+                } else if (playerSnake.getDirection() == "up") {
+                    playerSnake.moveUp(eaten);
+                } else if (playerSnake.getDirection() == "right") {
+                    playerSnake.moveRight(eaten);
+                } else if (playerSnake.getDirection() == "down") {
+                    playerSnake.moveDown(eaten);
+                }
+            }
+            break;*/
         case "left": //Left arrow
             if (playerSnake.getDirection() == "right") { //Can't move left if facing right
                 playerSnake.moveRight(eaten); //Keep moving right
@@ -303,11 +352,12 @@ function updateGame() {
             break;
     }
 
-    eaten = false; //After the snake has moved, set 'eaten' to 'false'
     clearCanvas(); //Clear the canvas
     colourFillCoords(foodLocation, "#FF0000"); //Print the food item onto the screen
     playerSnake.printSnake(); //Print the snake onto the new updated location
     lastKeyPress = null; //Clear the last key press
+
+
 }
 
 //Create the player and print it
@@ -321,9 +371,7 @@ var lastKeyPress = null;
 //At the start of the game, it is initialised with spawnFood()
 var foodLocation = spawnFood();
 
-//Global variable containing whether the snake's head is on the same square
-//as the food item (true) or not (false).
-var eaten = false; //Initially set to 'false'
+//var gameOver = false;
 
 //Refresh the game state at a specified time interval.
 //Saved to a variable so that clearInterval() can be called to freeze the game when the player loses.

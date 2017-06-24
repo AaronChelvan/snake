@@ -10,11 +10,14 @@
     text-align: center;
 }
 
-h1 {
+#gameOverText {
     text-align: center;
+    background: #f47070;
+    width: 320px;
+    margin:auto;
 }
 
-h3 {
+h1 {
     text-align: center;
 }
 
