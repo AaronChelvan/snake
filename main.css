@@ -14,7 +14,14 @@
     text-align: center;
     background: #f47070;
     width: 320px;
-    margin:auto;
+    margin: auto;
+}
+
+#startInstructions {
+    text-align: center;
+    background: #8ad9f2;
+    width: 320px;
+    margin: auto;
 }
 
 h1 {

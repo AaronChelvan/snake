@@ -282,13 +282,14 @@ function printGameOver() {
 
 //Create a new game by reinitialising the global variables, and running the updateGame function
 function newGame() {
-    //console.log("new game");
     playerSnake = new Snake();
     lastKeyPress = null;
     foodLocation = spawnFood();
     gameOver = false;
-    document.querySelector("#currentScore").innerText = 0;
-    gameplay = setInterval(updateGame, 200);
+    document.querySelector("#currentScore").innerText = 0; //Reset the displayed score
+    $("#startInstructions").hide(); //Hide the start instructions
+    $("#gameOverText").hide(); //Hide the gameOver instructions
+    gameplay = setInterval(updateGame, 200); //Start the running the game
 }
 
 //Update the game state
@@ -312,6 +313,8 @@ function updateGame() {
     if (playerSnake.checkEatenItself() == true) {
         clearInterval(gameplay);
         gameOver = true;
+        $("#gameOverText").show();
+        //$("")
         //printGameOver();
         return; //Return early so that the snake does not appear to move one space after it dies.
     }
@@ -363,15 +366,21 @@ var lastKeyPress = null;
 
 //Global variable containing the coordinates of where the food is currently at.
 //At the start of the game, it is initialised with spawnFood()
-var foodLocation; //= spawnFood();
+var foodLocation;
 
 //Global variable containing a boolean describing if the game is currently
 //in play (false), or not (true). Initially, set to 'true'.
 var gameOver = true;
 
-drawPlayingField();
-
 //Global variable which is later assigned to setInterval(updateGame, 200);
 //This refreshes the game state at a specified time interval.
 //clearInterval(gameplay) can then be used to freeze the game when the player loses.
 var gameplay;
+
+//As soons as the page is loaded, the snake is be drawn onto the page.
+drawPlayingField();
+
+//The gameOverText div should be initially hidden
+$(document).ready(function(){
+    $("#gameOverText").hide();
+});
