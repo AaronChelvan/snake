@@ -5,11 +5,14 @@
     <link rel="stylesheet" type="text/css" href="main.css"/>
     <!--Montserrat Font from Google Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <!--Font Awesome-->
+    <script src="https://use.fontawesome.com/fb01952f04.js"></script>
     <title>SNAKE</title>
 </head>
 
 <body>
     <h1>SNAKE</h1>
+
     <div class="scoreDisplay">
         <span>Best Score: </span>
         <span id="bestScore">0</span>
@@ -18,14 +21,28 @@
         <span>Current Score: </span>
         <span id="currentScore">0</span>
     </div>
+
     <br>
     <canvas id="playingField" width="320" height="320"></canvas>
     <br>
+
     <div id="startInstructions">Press the SPACEBAR to start playing</div>
     <div id="gameOverText">
         <div id="gameOverMessage">GAME OVER</div>
         <div id="gameOverInstructions">Press the SPACEBAR to play again</div>
     </div>
+    <br>
+
+    <div id="controls">
+        <span id="controlsText">Move with the arrow keys: </span>
+        <span id="controlsImage">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <i class="fa fa-arrow-up" aria-hidden="true"></i>
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+        </span>
+    </div>
+
     <!--jQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="script.js"></script>

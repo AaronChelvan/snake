@@ -287,8 +287,8 @@ function newGame() {
     foodLocation = spawnFood();
     gameOver = false;
     document.querySelector("#currentScore").innerText = 0; //Reset the displayed score
-    $("#startInstructions").fadeOut(); //Hide the start instructions
-    $("#gameOverText").fadeOut(); //Hide the gameOver instructions
+    $("#startInstructions").slideUp(); //Hide the start instructions
+    $("#gameOverText").slideUp(); //Hide the gameOver instructions
     gameplay = setInterval(updateGame, 100); //Start the running the game
 }
 
@@ -313,7 +313,7 @@ function updateGame() {
     if (playerSnake.checkEatenItself() == true) {
         clearInterval(gameplay);
         gameOver = true;
-        $("#gameOverText").fadeIn();
+        $("#gameOverText").slideDown();
         return; //Return early so that the snake does not appear to move one space after it dies.
     }
 
@@ -375,10 +375,8 @@ var gameOver = true;
 //clearInterval(gameplay) can then be used to freeze the game when the player loses.
 var gameplay;
 
-//As soons as the page is loaded, the snake is be drawn onto the page.
+//As soons as the page is loaded, the snake is drawn onto the canvas.
 drawPlayingField();
 
 //The gameOverText div should be initially hidden
-$(document).ready(function(){
-    $("#gameOverText").hide();
-});
+$("#gameOverText").hide();

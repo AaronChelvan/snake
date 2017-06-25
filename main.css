@@ -29,6 +29,22 @@
     margin: auto;
 }
 
+#header {
+    text-align: center;
+}
+
+#controls {
+    text-align: center;
+}
+
+#controlsText {
+
+}
+
+#controlsImage {
+    vertical-align: middle;
+}
+
 h1 {
     text-align: center;
 }
