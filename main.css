@@ -1,13 +1,22 @@
-#playingField {
-    background: #bdef8b;
-    border: 1px solid black;
-    margin: auto;
-    padding: 0px;
-    display: block;
+h1 {
+    text-align: center;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .scoreDisplay {
     text-align: center;
+}
+
+#playingField {
+    background-image: url("images/grass.png");
+    background-size: 100% 100%;
+    border: 1px solid black;
+    margin: auto;
+    padding: 0px;
+    display: block;
 }
 
 #gameOverText {
@@ -29,10 +38,6 @@
     margin: auto;
 }
 
-#header {
-    text-align: center;
-}
-
 #controls {
     text-align: center;
 }
@@ -45,10 +50,6 @@
     vertical-align: middle;
 }
 
-h1 {
+#footer {
     text-align: center;
-}
-
-body {
-    font-family: 'Montserrat', sans-serif;
 }
