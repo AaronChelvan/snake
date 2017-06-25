@@ -50,6 +50,12 @@ body {
     vertical-align: middle;
 }
 
+#touchControls {
+    text-align: center;
+    width: 320px;
+    margin: auto;
+}
+
 #footer {
     text-align: center;
 }

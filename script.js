@@ -380,3 +380,27 @@ drawPlayingField();
 
 //The gameOverText div should be initially hidden
 $("#gameOverText").hide();
+
+//Swipe controls
+$(function () {
+    var element = document.querySelector("body");
+    var mc = new Hammer(element);
+    mc.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+    mc.on("swipeleft", function() {
+        lastKeyPress = "left";
+    });
+    mc.on("swiperight", function() {
+        lastKeyPress = "right";
+    });
+    mc.on("swipeup", function() {
+        lastKeyPress = "up";
+    });
+    mc.on("swipedown", function() {
+        lastKeyPress = "down";
+    });
+    mc.on("tap", function() { //Equivalent of pressing the spacebar (which is used for starting a new game)
+        if (gameOver == true) {
+            newGame();
+        }
+    });
+});

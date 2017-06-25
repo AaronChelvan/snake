@@ -26,22 +26,26 @@
     <canvas id="playingField" width="320" height="320"></canvas>
     <br>
 
-    <div id="startInstructions">Press the SPACEBAR to start playing</div>
+    <div id="startInstructions">Press the SPACEBAR or TAP the screen to start playing</div>
     <div id="gameOverText">
         <div id="gameOverMessage">GAME OVER</div>
-        <div id="gameOverInstructions">Press the SPACEBAR to play again</div>
+        <div id="gameOverInstructions">Press the SPACEBAR or TAP the screen to play again</div>
     </div>
 
     <br>
 
     <div id="controls">
-        <span id="controlsText">Move with the arrow keys: </span>
+        <span id="controlsText">Move with the <strong>arrow</strong> keys: </span>
         <span id="controlsImage">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
             <i class="fa fa-arrow-up" aria-hidden="true"></i>
             <i class="fa fa-arrow-right" aria-hidden="true"></i>
             <i class="fa fa-arrow-down" aria-hidden="true"></i>
         </span>
+    </div>
+    <br>
+    <div id="touchControls">
+        If you are on a device with a touchscreen, you can <strong>swipe</strong> in the direction you want to move
     </div>
 
     <br>
@@ -54,6 +58,9 @@
 
     <!--jQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--Hammer JS-->
+    <script src="https://ajax.googleapis.com/ajax/libs/hammerjs/2.0.8/hammer.min.js"></script>
+    <!--My Javascript code-->
     <script src="script.js"></script>
 </body>
 
