@@ -272,13 +272,13 @@ function incrementScore() {
     //console.log("bestScore = " + bestScore);
 }
 
-function printGameOver() {
+/*function printGameOver() {
     var canvas = document.getElementById("playingField");
     var ctx = canvas.getContext("2d");
     ctx.font = "30px Montserrat";
     ctx.textAlign = "center";
     ctx.fillText("GAME OVER",160,160);
-}
+}*/
 
 //Create a new game by reinitialising the global variables, and running the updateGame function
 function newGame() {
@@ -287,9 +287,9 @@ function newGame() {
     foodLocation = spawnFood();
     gameOver = false;
     document.querySelector("#currentScore").innerText = 0; //Reset the displayed score
-    $("#startInstructions").hide(); //Hide the start instructions
-    $("#gameOverText").hide(); //Hide the gameOver instructions
-    gameplay = setInterval(updateGame, 200); //Start the running the game
+    $("#startInstructions").fadeOut(); //Hide the start instructions
+    $("#gameOverText").fadeOut(); //Hide the gameOver instructions
+    gameplay = setInterval(updateGame, 100); //Start the running the game
 }
 
 //Update the game state
@@ -313,9 +313,7 @@ function updateGame() {
     if (playerSnake.checkEatenItself() == true) {
         clearInterval(gameplay);
         gameOver = true;
-        $("#gameOverText").show();
-        //$("")
-        //printGameOver();
+        $("#gameOverText").fadeIn();
         return; //Return early so that the snake does not appear to move one space after it dies.
     }
 

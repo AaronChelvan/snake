@@ -17,6 +17,11 @@
     margin: auto;
 }
 
+#gameOverMessage {
+    font-size: 200%;
+    font-weight: bold;
+}
+
 #startInstructions {
     text-align: center;
     background: #8ad9f2;
